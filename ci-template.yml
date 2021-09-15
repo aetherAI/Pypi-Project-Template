@@ -27,7 +27,7 @@ generate_badge:
     - pip install anybadge toml
   script:
     - export PIP_EXTRA_INDEX_URL="https://gitlab-ci-token:$CI_JOB_TOKEN@gitlab.com/api/v4/groups/364078/-/packages/pypi/simple"
-    - curl $CI_API_V4_URL/projects/$CI_PROJECT_ID/repository/files/generate_badge.py\?ref\=master -H 'PRIVATE-TOKEN $CI_JOB_TOKEN'
+    - curl $CI_API_V4_URL/projects/pypi-project-template/repository/files/generate_badge.py\?ref\=master -H 'PRIVATE-TOKEN $CI_JOB_TOKEN'
     - python generate_badge.py package_badge.svg
   artifacts:
     paths:
