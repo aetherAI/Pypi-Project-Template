@@ -4,12 +4,12 @@ upload_pypi:
     - tags
   before_script:
     - python -V
-    - pip install poetry
+    - pip install poetry twine
   script:
     - echo $CI_COMMIT_TAG
     - poetry version $CI_COMMIT_TAG
     - poetry build
-    - TWINE_PASSWORD=$CI_JOB_TOKEN TWINE_USERNAME=gitlab-ci-token poetry run python3 -m twine upload --repository-url https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/packages/pypi dist/*
+    - TWINE_PASSWORD=$CI_JOB_TOKEN TWINE_USERNAME=gitlab-ci-token twine upload --repository-url https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/packages/pypi dist/*
 
 trigger_master_generate_badge:
   stage: postrelease
