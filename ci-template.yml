@@ -27,9 +27,12 @@ generate_badge:
     - pip install anybadge toml
   script:
     - export PIP_EXTRA_INDEX_URL="https://gitlab-ci-token:$CI_JOB_TOKEN@gitlab.com/api/v4/groups/364078/-/packages/pypi/simple"
-    - touch generate_badge.py
-    - curl $CI_API_V4_URL/projects/29621601/repository/files/generate_badge.py/raw\?ref\=master -H "PRIVATE-TOKEN:$CI_JOB_TOKEN" >> generate_badge.py
-    - python generate_badge.py package_badge.svg
+    - package_name=$(python -c "import toml; print(toml.load('pyproject.toml')['tool']['poetry']['name'])")
+    - latest_version=$( \
+        pip install ${package_name}==notexist 2>&1 | \
+        python -c "import re, sys; p = re.search(r'from versions: (.+)\)', sys.stdin.read()); print(p.group(1).split(', ')[-1])"
+      )
+    - anybadge -l pypi -v $latest_version -f package_badge.svg -c green -o
   artifacts:
     paths:
       - package_badge.svg
