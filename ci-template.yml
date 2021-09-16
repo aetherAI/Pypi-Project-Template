@@ -2,14 +2,13 @@ upload_pypi:
   stage: deploy
   only:
     - tags
-  before_script:
+  script:
     - python -V
     - pip install poetry twine
-  script:
     - echo $CI_COMMIT_TAG
     - poetry version $CI_COMMIT_TAG
     - poetry build
-    - TWINE_PASSWORD=$CI_JOB_TOKEN TWINE_USERNAME=gitlab-ci-token twine upload --repository-url https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/packages/pypi dist/*
+    - TWINE_PASSWORD=$CI_JOB_TOKEN TWINE_USERNAME=gitlab-ci-token twine upload --repository-url $CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/pypi dist/*
 
 trigger_master_generate_badge:
   stage: .post
@@ -20,14 +19,14 @@ trigger_master_generate_badge:
 
 generate_badge:
   stage: .post
+  image: python3.7
   only:
     - $CI_DEFAULT_BRANCH
   when:
     - always
-  before_script:
+  script:
     - pip install -U pip
     - pip install anybadge toml
-  script:
     - export PIP_EXTRA_INDEX_URL="https://gitlab-ci-token:$CI_JOB_TOKEN@gitlab.com/api/v4/groups/364078/-/packages/pypi/simple"
     - package_name=$(python -c "import toml; print(toml.load('pyproject.toml')['tool']['poetry']['name'])")
     - echo $package_name
