@@ -1,5 +1,5 @@
 upload_pypi:
-  stage: release
+  stage: deploy
   only:
     - tags
   before_script:
@@ -12,16 +12,18 @@ upload_pypi:
     - TWINE_PASSWORD=$CI_JOB_TOKEN TWINE_USERNAME=gitlab-ci-token twine upload --repository-url https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/packages/pypi dist/*
 
 trigger_master_generate_badge:
-  stage: postrelease
+  stage: .post
   only:
     - tags
   script:
-    - curl --request POST --form "token=$CI_JOB_TOKEN" --form ref=master "$CI_API_V4_URL/projects/$CI_PROJECT_ID/trigger/pipeline"
+    - curl --request POST --form token=$CI_JOB_TOKEN --form ref=$CI_DEFAULT_BRANCH "$CI_API_V4_URL/projects/$CI_PROJECT_ID/trigger/pipeline"
 
 generate_badge:
-  stage: postrelease
+  stage: .post
   only:
-    - master
+    - $CI_DEFAULT_BRANCH
+  when:
+    - always
   before_script:
     - pip install -U pip
     - pip install anybadge toml
@@ -31,7 +33,8 @@ generate_badge:
     - echo $package_name
     - latest_version=$((pip install ${package_name}==notexist 2>&1 || true) | grep versions | awk '{print substr($NF, 0, length($NF) - 1)}')
     - echo $latest_version
-    - anybadge -l pypi -v $latest_version -f package_badge.svg -c green -o
+    - color=$( [[ $latest_version = none ]] && echo 'red' || echo 'green')
+    - anybadge -l pypi -v $latest_version -f package_badge.svg -c $color -o
   artifacts:
     paths:
       - package_badge.svg
