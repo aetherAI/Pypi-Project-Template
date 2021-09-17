@@ -32,7 +32,7 @@ generate_badge:
     - pip install anybadge toml
     - package_name=$(python -c "import toml; print(toml.load('pyproject.toml')['tool']['poetry']['name'])")
     - echo $package_name
-    - latest_version=$((pip install ${package_name}==notexist 2>&1 || true) | grep versions | awk '{gsub(")", ""); print $NF}')
+    - latest_version=$((pip install ${package_name}==notexist 2>&1 || true) | grep versions | awk '{ gsub(/\)/, ""); print $NF }')
     - echo $latest_version
     - color=$( [[ $latest_version = none ]] && echo $FAIL_BADGE_COLOR || echo $SUCCESS_BADGE_COLOR)
     - anybadge -l pypi -v $latest_version -f package_badge.svg -c $color -o
