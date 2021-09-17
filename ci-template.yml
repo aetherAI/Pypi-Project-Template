@@ -22,12 +22,11 @@ generate_badge:
   image: python3.7
   rules:
     - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
+      when: always
   variables:
     PIP_EXTRA_INDEX_URL: "https://gitlab-ci-token:$CI_JOB_TOKEN@gitlab.com/api/v4/groups/364078/-/packages/pypi/simple"
     SUCCESS_BADGE_COLOR: green
     FAIL_BADGE_COLOR: red
-  when:
-    - always
   script:
     - pip install -U pip
     - pip install anybadge toml
