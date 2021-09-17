@@ -20,9 +20,8 @@ trigger_master_generate_badge:
 generate_badge:
   stage: .post
   image: python3.7
-  only:
-    variables:
-      - $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
+  rules:
+    - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
   variables:
     PIP_EXTRA_INDEX_URL: "https://gitlab-ci-token:$CI_JOB_TOKEN@gitlab.com/api/v4/groups/364078/-/packages/pypi/simple"
     SUCCESS_BADGE_COLOR: green
