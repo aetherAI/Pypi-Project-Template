@@ -19,7 +19,7 @@ trigger_master_generate_badge:
 
 generate_badge:
   stage: .pre
-  image: python3.7
+  image: registry.aetherai.com/docker-hub/library/python:3.7.6
   rules:
     - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
       allow_failure: true
