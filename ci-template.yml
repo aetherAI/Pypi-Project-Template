@@ -1,4 +1,4 @@
-upload_pypi:
+.upload_pypi_template:
   stage: deploy
   only:
     - tags
@@ -10,14 +10,14 @@ upload_pypi:
     - poetry build
     - TWINE_PASSWORD=$CI_JOB_TOKEN TWINE_USERNAME=gitlab-ci-token twine upload --repository-url $CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/pypi dist/*
 
-trigger_master_generate_badge:
+.trigger_master_generate_badge_template:
   stage: .post
   only:
     - tags
   script:
     - curl --request POST --form token=$CI_JOB_TOKEN --form ref=$CI_DEFAULT_BRANCH "$CI_API_V4_URL/projects/$CI_PROJECT_ID/trigger/pipeline"
 
-generate_badge:
+.generate_badge_template:
   stage: .post
   image: registry.aetherai.com/docker-hub/library/python:3.7.6
   rules:
@@ -40,3 +40,12 @@ generate_badge:
     paths:
       - package_badge.svg
     expire_in: 4 weeks
+
+upload_pypi:
+  extends: .upload_pypi_template
+
+trigger_master_generate_badge:
+  extends: .trigger_master_generate_badge_template
+
+generate_badge:
+  extends: .generate_badge_template
