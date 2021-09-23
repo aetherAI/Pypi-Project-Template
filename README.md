@@ -12,15 +12,17 @@
     include:
       - project: 'DYSK_Labs/pypi-project-template'
         ref: <Ref> (e.g. branch or commit or tag)
-        file: ci-template.yml
+        file: pypi_jobs.gitlab-ci.yml
 
     # Optional:
     # upload_pypi:
-    #    something you want to override
+    #   extends: .upload_pypi_template
+
     # trigger_master_generate_badge:
-    #    something you want to override
+    #   extends: .trigger_master_generate_badge_template
+
     # generate_badge:
-    #    something you want to override
+    #   extends: .generate_badge_template
     ```
 
 2. Add badge with image url: <https://gitlab.com/%{project_path}/-/jobs/artifacts/${default_branch}/raw/package_badge.svg?job=generate_badge>
