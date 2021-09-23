@@ -2,14 +2,15 @@
   stage: deploy
   variables:
     POETRY_VERSION: "==1.1.*"
-  only:
-    - tags
+    PUBLISH_ARGS: ""
+  rules:
+    - if: $CI_COMMIT_TAG
   script:
     - python -V
     - pip install "poetry${POETRY_VERSION}"
     - echo $CI_COMMIT_TAG
     - poetry version $CI_COMMIT_TAG
-    - poetry publish -r $CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/pypi -u gitlab-ci-token -p $CI_JOB_TOKEN --build
+    - poetry publish --build -r $CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/pypi -u gitlab-ci-token -p $CI_JOB_TOKEN $PUBLISH_ARGS
 
 .trigger_master_generate_badge_template:
   stage: .post
@@ -44,6 +45,15 @@
 
 upload_pypi:
   extends: .upload_pypi_template
+
+test_upload_pypi:
+  extends: .upload_pypi_template
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: never
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  variables:
+    PUBLISH_ARGS: "--dry-run"
 
 trigger_master_generate_badge:
   extends: .trigger_master_generate_badge_template
