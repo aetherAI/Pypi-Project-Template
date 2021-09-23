@@ -1,10 +1,13 @@
 .upload_pypi_template:
   stage: deploy
+  variables:
+    POETRY_VERSION: "==1.1.*"
+    TWINE_VERSION: "==3.3.0"
   only:
     - tags
   script:
     - python -V
-    - pip install poetry twine
+    - pip install "poetry${POETRY_VERSION}" "twine${TWINE_VERSION}"
     - echo $CI_COMMIT_TAG
     - poetry version $CI_COMMIT_TAG
     - poetry build
