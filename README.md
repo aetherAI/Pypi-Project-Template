@@ -44,3 +44,21 @@ Template of `gitlab.ci.yml` for pypi package CI/CD.
 ## Docstring Template
 
 Custom template file for VSCode extension [Python Docstring Generator](https://marketplace.visualstudio.com/items?itemName=njpwerner.autodocstring).
+
+1. Add Custom Template Path
+
+    <img src="https://i.imgur.com/ktMKnIC.png" alt="drawing" width="800"/>
+
+2. Generate docstring for function
+
+    <img src="https://i.imgur.com/ExJ9TsP.png" alt="drawing" width="800"/>
+
+3. Result of generation
+
+    <img src="https://i.imgur.com/MTIdFsI.png" alt="drawing" width="800"/>
+
+4. Result of Pylance display
+
+    <img src="https://i.imgur.com/FUgWYut.png" alt="drawing" width="800"/>
+
+
