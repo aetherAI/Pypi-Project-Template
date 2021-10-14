@@ -55,7 +55,7 @@ add the following section to your `.nitpick.toml` or `pyproject.toml` ([detail](
 [tool.nitpick]
 style = [
     "https://github.com/aetherAI/Pypi-Project-Template/blob/master/nitpick-style.toml"  # master can be replaced to tag or branch,
-    ...,  # optional
+    # ...,  optional, will override the former
 ]
 cache = false
 ```
