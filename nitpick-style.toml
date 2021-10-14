@@ -1,0 +1,10 @@
+["setup.cfg".flake8]
+max-line-length = 119
+# E125: continuation line under-indented for hanging indent
+# E266: too many leading '#' for block comment
+# W503: line break before binary operator
+# E731: assign lambda
+ignore = "E125,E266,W503,E731"
+exclude = ".git,__pycache__,.venv,venv,env,build,docs,*/__init__.py"
+max_complexity = 20
+statistics = true
