@@ -4,7 +4,7 @@
 
 ["setup.cfg"."coverage:report"]
 # Regexes for lines to exclude from consideration
-exclude_lines = """
+exclude_lines = """ 
     # Don't complain about missing debug-only code:
     def __repr__
 
@@ -36,8 +36,22 @@ max-line-length = 119
 # E266: too many leading '#' for block comment
 # E731: assign lambda
 # W503: line break before binary operator
-ignore = "E125,E266,E731,W503"
-exclude = ".git,__pycache__,.venv,venv,env,build,docs,*/__init__.py"
+ignore = "E125,E266,W503,E731"
+exclude = """ 
+    .git,
+    __pycache__,
+    # virtual environment
+    .venv/,
+    venv/,
+    env/
+    build/
+    # sphinx docs
+    docs/
+"""
+per-file-ignores = """ 
+    # allow import sugar
+    */__init__.py: F401
+"""
 max_complexity = 20
 statistics = true
 inline-quotes = "single"
