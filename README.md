@@ -41,6 +41,28 @@ Template of `gitlab.ci.yml` for pypi package CI/CD.
 
 2. Add badge with image url: <https://gitlab.com/%{project_path}/-/jobs/artifacts/${default_branch}/raw/package_badge.svg?job=generate_badge>
 
+## Shared Configuration
+
+[nitpick](https://nitpick.readthedocs.io/en/latest/index.html)
+
+```bash
+$ poetry add -D nitpick
+```
+
+add the following section to your `.nitpick.toml` or `pyproject.toml` ([detail](https://nitpick.readthedocs.io/en/latest/configuration.html#configuration))
+
+```toml
+[tool.nitpick]
+style = "<path-to-style-file>"
+```
+
+finally, run:
+
+```bash
+$ nitpick check -v
+$ nitpick fix -v
+```
+
 ## Docstring Template
 
 Custom template file for VSCode extension [Python Docstring Generator](https://marketplace.visualstudio.com/items?itemName=njpwerner.autodocstring).
@@ -60,5 +82,3 @@ Custom template file for VSCode extension [Python Docstring Generator](https://m
 4. Result of Pylance display
 
     <img src="https://i.imgur.com/FUgWYut.png" alt="drawing" width="800"/>
-
-
