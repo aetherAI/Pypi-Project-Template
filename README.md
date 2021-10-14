@@ -24,19 +24,19 @@ Template of `gitlab.ci.yml` for pypi package CI/CD.
     # Optional
     upload_pypi:
       extends: .upload_pypi_template
-      # override setings
+      # override settings
 
     test_upload_pypi:
       extends: .test_upload_pypi_template
-      # override setings
+      # override settings
 
     trigger_master_generate_badge:
       extends: .trigger_master_generate_badge_template
-      # override setings
+      # override settings
 
     generate_badge:
       extends: .generate_badge_template
-      # override setings
+      # override settings
     ```
 
 2. Add badge with image url: <https://gitlab.com/%{project_path}/-/jobs/artifacts/${default_branch}/raw/package_badge.svg?job=generate_badge>
@@ -53,7 +53,11 @@ add the following section to your `.nitpick.toml` or `pyproject.toml` ([detail](
 
 ```toml
 [tool.nitpick]
-style = "<path-to-style-file>"
+style = [
+    "https://github.com/aetherAI/Pypi-Project-Template/blob/master/nitpick-style.toml"  # master can be replaced to tag or branch,
+    ...,  # optional
+]
+cache = false
 ```
 
 finally, run:
