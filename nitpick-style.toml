@@ -32,11 +32,18 @@ branch = true
 
 ["setup.cfg".flake8]
 max-line-length = 119
-# E125: continuation line under-indented for hanging indent
-# E266: too many leading '#' for block comment
-# E731: assign lambda
-# W503: line break before binary operator
-ignore = "E125,E266,W503,E731"
+ignore = """ 
+    # Do not assign a lambda expression, use a def (https://www.flake8rules.com/rules/E731.html)
+    E731,
+    # Line break occurred before a binary operator (https://www.flake8rules.com/rules/W503.html)
+    W503,
+    # Too strict & subjective
+    NIP,WPS
+    # Docstring related, not ready...
+    D,DAR,RST
+    # Found commented out code, not ready...
+    E800
+"""
 exclude = """ 
     .git,
     __pycache__,
@@ -51,6 +58,8 @@ exclude = """
 per-file-ignores = """ 
     # allow import sugar
     */__init__.py: F401
+    # allow non-optimized or insecure code in tests
+    *test*.py: S
 """
 max_complexity = 20
 statistics = true
