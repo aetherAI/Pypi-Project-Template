@@ -57,7 +57,7 @@ style = [
     "https://github.com/aetherAI/Pypi-Project-Template/blob/master/nitpick-style.toml"  # master can be replaced to tag or branch,
     # ...,  optional, will override the former
 ]
-cache = false
+cache = "never"
 ```
 
 finally, run:
