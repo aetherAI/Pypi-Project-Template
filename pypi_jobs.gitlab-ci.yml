@@ -19,6 +19,8 @@
   rules:
     - if: $CI_COMMIT_TAG
       when: never
+    - if: $TRIGGER_TO_GENERATE_BADGE
+      when: never
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
   script:
     - python -V
@@ -31,7 +33,11 @@
   rules:
     - if: $CI_COMMIT_TAG
   script:
-    - curl --request POST --form token=$CI_JOB_TOKEN --form ref=$CI_DEFAULT_BRANCH "$CI_API_V4_URL/projects/$CI_PROJECT_ID/trigger/pipeline"
+    - curl --request POST
+      --form token=$CI_JOB_TOKEN
+      --form ref=$CI_DEFAULT_BRANCH
+      --form "variables[TRIGGER_TO_GENERATE_BADGE]=true"
+      "$CI_API_V4_URL/projects/$CI_PROJECT_ID/trigger/pipeline"
 
 .generate_badge_template:
   stage: .post
