@@ -43,7 +43,7 @@
       "$CI_API_V4_URL/projects/$CI_PROJECT_ID/trigger/pipeline"
 
 .generate_badge_template:
-  stage: .post
+  stage: deploy
   image: registry.aetherai.com/docker-hub/library/python:3.7.6
   rules:
     - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
