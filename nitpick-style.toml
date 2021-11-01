@@ -68,7 +68,7 @@ inline-quotes = "single"
 ["setup.cfg".isort]
 # Reference
 # https://pycqa.github.io/isort/docs/configuration/options/
-line_length = 119
+line_length = 100
 multi_line_output = 5
 include_trailing_comma = true
 balanced_wrapping = true

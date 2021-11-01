@@ -1,7 +1,3 @@
-.skip_if_gen_badge: &skip_if_gen_badge
-  - if: $TRIGGER_TO_GENERATE_BADGE
-    when: never
-
 .upload_pypi_template:
   stage: deploy
   variables:
@@ -21,7 +17,6 @@
   variables:
     POETRY_VERSION: "==1.1.*"
   rules:
-    - *skip_if_gen_badge
     - if: $CI_COMMIT_TAG
       when: never
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
@@ -31,49 +26,8 @@
     - poetry config repositories.project_pypi $CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/pypi
     - poetry publish --dry-run --build -r project_pypi -u gitlab-ci-token -p $CI_JOB_TOKEN
 
-.trigger_master_generate_badge_template:
-  stage: .post
-  rules:
-    - if: $CI_COMMIT_TAG
-  script:
-    - curl --request POST
-      --form token=$CI_JOB_TOKEN
-      --form ref=$CI_DEFAULT_BRANCH
-      --form "variables[TRIGGER_TO_GENERATE_BADGE]=true"
-      "$CI_API_V4_URL/projects/$CI_PROJECT_ID/trigger/pipeline"
-
-.generate_badge_template:
-  stage: deploy
-  image: registry.aetherai.com/docker-hub/library/python:3.7.6
-  rules:
-    - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
-      when: always
-  variables:
-    PIP_EXTRA_INDEX_URL: "https://gitlab-ci-token:$CI_JOB_TOKEN@gitlab.com/api/v4/groups/364078/-/packages/pypi/simple"
-    SUCCESS_BADGE_COLOR: green
-    FAIL_BADGE_COLOR: red
-  script:
-    - pip install -U pip
-    - pip install anybadge toml
-    - package_name=$(python -c "import toml; print(toml.load('pyproject.toml')['tool']['poetry']['name'])")
-    - echo $package_name
-    - latest_version=$((pip install ${package_name}==notexist 2>&1 || true) | grep versions | awk '{ gsub(/\)/, ""); print $NF }')
-    - echo $latest_version
-    - color=$( [[ $latest_version = none ]] && echo $FAIL_BADGE_COLOR || echo $SUCCESS_BADGE_COLOR)
-    - anybadge -l pypi -v $latest_version -f package_badge.svg -c $color -o
-  artifacts:
-    paths:
-      - package_badge.svg
-    expire_in: 4 weeks
-
 upload_pypi:
   extends: .upload_pypi_template
 
 test_upload_pypi:
   extends: .test_upload_pypi_template
-
-trigger_master_generate_badge:
-  extends: .trigger_master_generate_badge_template
-
-generate_badge:
-  extends: .generate_badge_template
