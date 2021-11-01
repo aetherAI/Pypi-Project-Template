@@ -6,11 +6,13 @@
     - if: $CI_COMMIT_TAG
   script:
     - python -V
-    - pip install "poetry${POETRY_VERSION}"
+    - pip install "poetry${POETRY_VERSION}" packaging
     - echo $CI_COMMIT_TAG
+    - echo $CI_COMMIT_TAG | python -c "from packaging.version import Version; import sys; Version(sys.stdin.read())"
     - poetry version $CI_COMMIT_TAG
     - poetry config repositories.project_pypi $CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/pypi
     - poetry publish --build -r project_pypi -u gitlab-ci-token -p $CI_JOB_TOKEN
+  allow_failure: true
 
 .test_upload_pypi_template:
   stage: deploy
