@@ -1,0 +1,31 @@
+["setup.cfg"."coverage:report"]
+# Regexes for lines to exclude from consideration
+exclude_lines = """ 
+    # Don't complain about missing debug-only code:
+    def __repr__
+
+    # Don't complain if tests don't hit defensive assertion code:
+    raise AssertionError
+    raise NotImplementedError
+
+    # Don't complain if tests don't hit abstract class
+    abc.
+    ABC
+    @abstractmethod
+
+    # Don't complain if non-runnable code isn't run:
+    if 0:
+    if __name__ == .__main__.:
+
+    # Manually escape
+    pragma: no cover
+"""
+ignore_errors = true
+omit = "*__init__.py, *tests/*"
+
+["setup.cfg"."coverage:run"]
+branch = true
+
+["pyproject.toml".tool.poetry.dev-dependencies]
+pytest = "*"
+pytest-cov = "*"

@@ -2,34 +2,6 @@
 "requirements.txt" = "Install poetry, run 'poetry init' to create pyproject.toml, and move dependencies to it"
 ".isort.cfg" = "Move values to setup.cfg, section [isort]"
 
-["setup.cfg"."coverage:report"]
-# Regexes for lines to exclude from consideration
-exclude_lines = """ 
-    # Don't complain about missing debug-only code:
-    def __repr__
-
-    # Don't complain if tests don't hit defensive assertion code:
-    raise AssertionError
-    raise NotImplementedError
-
-    # Don't complain if tests don't hit abstract class
-    abc.
-    ABC
-    @abstractmethod
-
-    # Don't complain if non-runnable code isn't run:
-    if 0:
-    if __name__ == .__main__.:
-
-    # Manually escape
-    pragma: no cover
-"""
-ignore_errors = true
-omit = "*__init__.py, *tests/*"
-
-["setup.cfg"."coverage:run"]
-branch = true
-
 ["setup.cfg".flake8]
 max-line-length = 119
 ignore = """ 
@@ -74,13 +46,5 @@ include_trailing_comma = true
 balanced_wrapping = true
 lines_after_imports = 2
 
-["setup.cfg"."tool:pytest"]
-addopts = "--pdbcls IPython.terminal.debugger:TerminalPdb"
-
 ["pyproject.toml".tool.poetry.dev-dependencies]
-ipython = "*"
-ipdb = "*"
-jedi = "<0.18.0"
-pytest = "*"
-pytest-cov = "*"
 wemake-python-styleguide = ">=0.15"
