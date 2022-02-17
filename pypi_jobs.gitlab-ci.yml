@@ -1,30 +1,31 @@
+.install_poetry: &install_poetry
+  - apt update && apt install curl
+  - curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
+
 .upload_pypi_template:
   stage: deploy
-  variables:
-    POETRY_VERSION: "==1.1.*"
   rules:
     - if: $CI_COMMIT_TAG
   script:
-    - python -V
-    - pip install "poetry${POETRY_VERSION}" packaging
+    - *install_poetry
+    - pip install packaging
     - echo $CI_COMMIT_TAG
     - echo $CI_COMMIT_TAG | python -c "from packaging.version import Version; import sys; Version(sys.stdin.read())"
     - poetry version $CI_COMMIT_TAG
+    - poetry install --no-root
     - poetry config repositories.project_pypi $CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/pypi
     - poetry publish --build -r project_pypi -u gitlab-ci-token -p $CI_JOB_TOKEN
   allow_failure: true
 
 .test_upload_pypi_template:
   stage: deploy
-  variables:
-    POETRY_VERSION: "==1.1.*"
   rules:
     - if: $CI_COMMIT_TAG
       when: never
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
   script:
-    - python -V
-    - pip install "poetry${POETRY_VERSION}"
+    - *install_poetry
+    - poetry install --no-root
     - poetry config repositories.project_pypi $CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/pypi
     - poetry publish --dry-run --build -r project_pypi -u gitlab-ci-token -p $CI_JOB_TOKEN
 
