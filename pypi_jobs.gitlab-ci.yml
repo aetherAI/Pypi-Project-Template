@@ -12,6 +12,10 @@ variables:
   - poetry config repositories.project_pypi $CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/pypi
   - poetry config --list
 
+.install_poetry_before_script:
+  before_script:
+    - *install_poetry
+
 # HACK
 .install_build_requires: &install_build_requires
   - poetry run pip install toml
