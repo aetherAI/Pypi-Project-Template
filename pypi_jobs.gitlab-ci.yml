@@ -34,14 +34,16 @@ variables:
     - poetry install
   cache:
     paths:
-      - $VENV_PATH
+      - $POETRY_VIRTUALENVS_PATH
     key:
       files:
         - poetry.lock
   artifacts:
     paths:
-      - $VENV_PATH
+      - $PIP_CACHE_DIR
+      - $POETRY_CACHE_DIR
       - $POETRY_HOME
+      - $POETRY_VIRTUALENVS_PATH
     expire_in: 60 mins
 
 .upload_pypi_template:
