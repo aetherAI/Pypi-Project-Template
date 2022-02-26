@@ -1,0 +1,41 @@
+include:
+  - local: 'install-poetry-before-script.gitlab-ci.yml'
+
+.build_template:
+  stage: build
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: never
+    - when: on_success
+  script:
+    - poetry install
+  cache:
+    paths:
+      - $POETRY_VIRTUALENVS_PATH
+    key:
+      files:
+        - poetry.lock
+  artifacts:
+    paths:
+      - $POETRY_CACHE_DIR
+      - $POETRY_HOME
+      - $POETRY_VIRTUALENVS_PATH
+    expire_in: 60 mins
+
+.test_template:
+  stage: test
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: never
+  script:
+    - poetry run pytest
+
+.lint_template:
+  stage: test
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: never
+    - changes:
+      - "*.py"
+  script:
+    - poetry run flake8
