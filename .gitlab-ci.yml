@@ -1,5 +1,6 @@
 include:
   - local: ci-templates/test.gitlab-ci.yml
+  - template: Workflows/MergeRequest-Pipelines.gitlab-ci.yml
 
 build:
   extends: .build_template
