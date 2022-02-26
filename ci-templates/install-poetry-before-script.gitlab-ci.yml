@@ -5,9 +5,15 @@ variables:
   POETRY_HOME: .poetry
 
 .install_poetry: &install_poetry
-  - apt update && apt install -y curl
-  - curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
-  - source $POETRY_HOME/env
+  - if ! command -v poetry &> /dev/null;
+    then
+      echo "poetry not found, start installing...";
+      apt update && apt install -y curl;
+      curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -;
+      source $POETRY_HOME/env;
+    else
+      echo "poetry exists, skip installing";
+    fi
   - poetry -V
 
 default:
