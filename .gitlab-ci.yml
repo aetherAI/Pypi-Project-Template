@@ -1,0 +1,11 @@
+include:
+  - local: ci-templates/test.gitlab-ci.yml
+
+build:
+  extends: .build_template
+
+test:
+  extends: .test_template
+
+lint:
+  extends: .lint_template
