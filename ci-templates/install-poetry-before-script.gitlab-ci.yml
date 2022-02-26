@@ -9,7 +9,7 @@ variables:
     then
       echo "poetry not found, start installing...";
       apt update;
-      apt install -y curl python3-venv;
+      apt install -y curl python3.7-venv;
       curl -sSL https://install.python-poetry.org | python3 - -y;
     else
       echo "find poetry at $POETRY_HOME, skip installing";
