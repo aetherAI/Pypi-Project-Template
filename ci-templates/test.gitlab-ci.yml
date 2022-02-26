@@ -1,5 +1,7 @@
 include:
   - local: ci-templates/install-poetry-before-script.gitlab-ci.yml
+  # https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Workflows/MergeRequest-Pipelines.gitlab-ci.yml
+  - template: Workflows/MergeRequest-Pipelines.gitlab-ci.yml
 
 .build_template:
   stage: build
@@ -17,6 +19,7 @@ include:
         - poetry.lock
   artifacts:
     paths:
+      - $PIP_CACHE_DIR
       - $POETRY_CACHE_DIR
       - $POETRY_HOME
       - $POETRY_VIRTUALENVS_PATH
@@ -27,8 +30,7 @@ include:
   rules:
     - if: $CI_COMMIT_TAG
       when: never
-    - changes:
-      - "*.py"
+    - when: on_success
   script:
     - poetry run pytest
   coverage: '/^TOTAL.+?(\d+\%)$/'
@@ -39,6 +41,7 @@ include:
     - if: $CI_COMMIT_TAG
       when: never
     - changes:
-      - "*.py"
+        - "**/*.py"
+  # lint in venv in case there's any lint extension
   script:
     - poetry run flake8
