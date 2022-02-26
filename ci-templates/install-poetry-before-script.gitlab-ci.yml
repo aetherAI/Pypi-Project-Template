@@ -1,19 +1,20 @@
 variables:
-  PIP_CACHE_DIR: .cache/pip
-  POETRY_CACHE_DIR: .cache/pypoetry
-  POETRY_VIRTUALENVS_PATH: venv
-  POETRY_HOME: .poetry
+  PIP_CACHE_DIR: $CI_PROJECT_DIR/.cache/pip
+  POETRY_CACHE_DIR: $CI_PROJECT_DIR/.cache/pypoetry
+  POETRY_VIRTUALENVS_PATH: $CI_PROJECT_DIR/venv
+  POETRY_HOME: $CI_PROJECT_DIR/.poetry
 
 .install_poetry: &install_poetry
-  - if ! command -v poetry &> /dev/null;
+  - if ! test -d $POETRY_HOME;
     then
       echo "poetry not found, start installing...";
       apt update && apt install -y curl;
-      curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -;
-      source $POETRY_HOME/env;
+      curl -sSL https://install.python-poetry.org | python3 - -y;
     else
-      echo "poetry exists, skip installing";
+      echo "find poetry at $POETRY_HOME, skip installing";
     fi
+  - export PATH="$POETRY_HOME/bin:$PATH" >> $HOME/.bashrc
+  - source $HOME/.bashrc
   - poetry -V
 
 default:
