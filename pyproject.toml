@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "example-project"
+version = "0.1.0"
+description = ""
+authors = ["Jsaon Lin <jsaonlin@aetherai.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+
+[tool.poetry.dev-dependencies]
+pytest = "*"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

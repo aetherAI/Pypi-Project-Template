@@ -45,6 +45,7 @@ multi_line_output = 5
 include_trailing_comma = true
 balanced_wrapping = true
 lines_after_imports = 2
+combine_as_imports = true
 
 ["pyproject.toml".tool.poetry.dev-dependencies]
 wemake-python-styleguide = ">=0.15"
