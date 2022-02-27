@@ -8,8 +8,8 @@ Template of `gitlab.ci.yml` for pypi package CI/CD.
 ### Requirments
 
 1. `pyproject.toml`.
-2. `deploy` ci stages. (`.post` is always included)
-3. `python` & `pip` pre-installed in ci `image` or via `before_script`
+2. `test`, `deploy` ci stages. (included by default)
+3. `python >= 3.7` pre-installed in `image`
 
 ### How to use
 
@@ -19,34 +19,33 @@ Template of `gitlab.ci.yml` for pypi package CI/CD.
     include:
       - project: 'DYSK_Labs/pypi-project-template'
         ref: <Ref> (e.g. branch or commit or tag)
-        file: pypi_jobs.gitlab-ci.yml
+        file:
+          - ci-templates/test.gitlab-ci.yml
+          - ci-templates/deploy.gitlab-ci.yml
 
-    # Optional
-    upload_pypi:
-      extends: .upload_pypi_template
-      # override settings
+    build:
+      extends: .build_template
+      # override example
+      before_script:
+        - !reference [default, before_script]
+        - some new stuff
+    test:
+      extends: .test_template
 
-    test_upload_pypi:
-      extends: .test_upload_pypi_template
-      # override settings
+    lint:
+      extends: .lint_template
 
-    trigger_master_generate_badge:
-      extends: .trigger_master_generate_badge_template
-      # override settings
+    publish:
+      extends: .publish_template
 
-    generate_badge:
-      extends: .generate_badge_template
-      # override settings
     ```
-
-2. Add badge with image url: <https://gitlab.com/%{project_path}/-/jobs/artifacts/${default_branch}/raw/package_badge.svg?job=generate_badge>
 
 ## Shared Configuration
 
 [nitpick](https://nitpick.readthedocs.io/en/latest/index.html)
 
 ```bash
-$ poetry add -D nitpick
+$ pip install nitpick
 ```
 
 add the following section to your `.nitpick.toml` or `pyproject.toml` ([detail](https://nitpick.readthedocs.io/en/latest/configuration.html#configuration))
@@ -54,8 +53,9 @@ add the following section to your `.nitpick.toml` or `pyproject.toml` ([detail](
 ```toml
 [tool.nitpick]
 style = [
-    "https://github.com/aetherAI/Pypi-Project-Template/blob/master/nitpick-style.toml"  # master can be replaced to tag or branch,
+    "https://github.com/aetherAI/Pypi-Project-Template/blob/<ref>/nitpick-style/lint.toml",
     # ...,  optional, will override the former
+    "https://github.com/aetherAI/Pypi-Project-Template/blob/<ref>/nitpick-style/coverage.toml",
 ]
 cache = "never"
 ```
