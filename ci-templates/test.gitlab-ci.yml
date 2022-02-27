@@ -32,7 +32,8 @@ include:
       when: never
     - when: on_success
   script:
-    - poetry run pytest
+    - poetry run pytest --version
+    - poetry run pytest -vv
   coverage: '/^TOTAL.+?(\d+\%)$/'
 
 .lint_template:
@@ -44,4 +45,5 @@ include:
         - "**/*.py"
   # lint in venv in case there's any lint extension
   script:
+    - poetry run flake8 --version
     - poetry run flake8
