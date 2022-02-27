@@ -5,14 +5,15 @@ variables:
   POETRY_HOME: $CI_PROJECT_DIR/.poetry
 
 .install_poetry: &install_poetry
-  - if ! test -d $POETRY_HOME;
+  - |
+    if ! test -d $POETRY_HOME
     then
-      echo "poetry not found, start installing...";
-      apt update;
-      apt install -y curl python3.7-venv;
-      curl -sSL https://install.python-poetry.org | python3 - -y;
+      echo "poetry not found, start installing..."
+      apt update && apt install -y curl
+      apt install -y python3.7-venv || true
+      curl -sSL https://install.python-poetry.org | python3 - -y
     else
-      echo "find poetry at $POETRY_HOME, skip installing";
+      echo "find poetry at $POETRY_HOME, skip installing"
     fi
   - export PATH="$POETRY_HOME/bin:$PATH" >> $HOME/.bashrc
   - source $HOME/.bashrc
