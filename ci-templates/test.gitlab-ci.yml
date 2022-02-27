@@ -46,4 +46,4 @@ include:
   # lint in venv in case there's any lint extension
   script:
     - poetry run flake8 --version
-    - poetry run flake8
+    - poetry run flake8 --extend-exclude .poetry
