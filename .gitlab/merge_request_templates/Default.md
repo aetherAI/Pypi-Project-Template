@@ -12,16 +12,16 @@ _斜體部分_ 可刪。
 - [ ] 若有任何參與協助者，提及他們的貢獻並表達感謝。
 - [ ] 若引用外部資源（如 stack overflow 或開源套件），附上來源並明白相關之 LICENSE 和 copyright 內容。[懶人包](https://gitlab.com/DYSK_Labs/the-hitchhiker-s-guide-to-the-web-team/-/wikis/Software-LICENSE-%E6%87%B6%E4%BA%BA%E5%8C%85)
 
-# 目的
+# Goal
 
 _描述此 MR 為何需要被 merge，如 feature 實作 / 修 bug / 效能改善 / 設計改善。_
 
 # Keywords
 _方便搜尋用，隨性打，如：改動檔名 / packages。_
 
-# 改動
+# Changes
 
-_條列式說明改動內容和其影響，行為描述先於實作細節。_
+_條列式說明改動內容和其影響，重要性：修改意圖 > 行為描述 > 實作細節。_
 
 _範例：_
 - _`function_with_bug` 在 `x` 為正整數時才會正確，故補上 guard clause raise `ValueError` 提醒使用者。_
