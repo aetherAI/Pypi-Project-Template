@@ -8,9 +8,7 @@ variables:
   - >
     if ! test -d $POETRY_HOME; then
       echo "poetry not found, start installing..."
-      apt update && apt install -y curl
-      apt install -y python3.7-venv || true
-      curl -sSL https://install.python-poetry.org | python3 - -y
+      curl -sSL https://install.python-poetry.org | python3.7 - -y
     else
       echo "find poetry at $POETRY_HOME, skip installing"
     fi
@@ -19,6 +17,6 @@ variables:
   - poetry -V
 
 default:
-  image: python:3.7
+  image: quay.io/pypa/manylinux2014_x86_64:latest
   before_script:
     - *install_poetry
