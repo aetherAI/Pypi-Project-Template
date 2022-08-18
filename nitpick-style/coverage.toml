@@ -25,7 +25,3 @@ omit = "*__init__.py, *tests/*"
 
 ["setup.cfg"."coverage:run"]
 branch = true
-
-["pyproject.toml".tool.poetry.dev-dependencies]
-pytest = "*"
-pytest-cov = "*"
