@@ -13,16 +13,9 @@ include:
   rules:
     # https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string
     - if: $CI_COMMIT_TAG =~ ^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
   script:
     - *install_build_requires
     - poetry config repositories.project_pypi $CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/pypi
-    - >
-      if [[ $CI_COMMIT_TAG ]] ; then
-        echo "publish as $CI_COMMIT_TAG"
-        poetry version $CI_COMMIT_TAG
-        poetry publish --build -r project_pypi -u gitlab-ci-token -p $CI_JOB_TOKEN
-      else
-        echo "no tag, dry run"
-        poetry publish --build -r project_pypi -u gitlab-ci-token -p $CI_JOB_TOKEN --dry-run
-      fi
+    - echo "publish as $CI_COMMIT_TAG"
+    - poetry version $CI_COMMIT_TAG
+    - poetry publish --build -r project_pypi -u gitlab-ci-token -p $CI_JOB_TOKEN
