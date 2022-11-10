@@ -19,3 +19,6 @@ include:
     - echo "publish as $CI_COMMIT_TAG"
     - poetry version $CI_COMMIT_TAG
     - poetry publish --build -r project_pypi -u gitlab-ci-token -p $CI_JOB_TOKEN
+  release:
+    tag_name: '$CI_COMMIT_TAG'
+    description: '$CI_COMMIT_TAG'
