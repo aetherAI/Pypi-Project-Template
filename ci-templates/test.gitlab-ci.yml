@@ -47,3 +47,12 @@ include:
   script:
     - poetry run flake8 --version
     - poetry run flake8 --extend-exclude .poetry
+
+build:
+  extends: .build_template
+
+test:
+  extends: .test_template
+
+lint:
+  extends: .lint_template
