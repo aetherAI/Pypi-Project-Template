@@ -3,14 +3,11 @@ include:
   - local: ci-templates/deploy.gitlab-ci.yml
   - template: Workflows/MergeRequest-Pipelines.gitlab-ci.yml
 
-publish:
-  extends: .publish_template
-  rules:
-    - if: $CI_COMMIT_TAG
-      when: never
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-
 test:
   script:
     - echo "example override"
-    - !reference [.test_template, script]
+    - !reference [.test, script]
+
+publish:
+  rules:
+    - when: never
