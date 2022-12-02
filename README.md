@@ -1,46 +1,48 @@
 # Pypi Project Template
 
-
 ## Pypi Jobs Template
 
 Template of `gitlab.ci.yml` for pypi package CI/CD.
 
-### Requirments
+### Requirements
 
 1. `pyproject.toml`.
-2. `test`, `deploy` ci stages. (included by default)
-3. `python >= 3.7` pre-installed in `image`
+    - `ci-templates/test.gitlab-ci.yml` requires `pytest`, `flake8`.
+    - `ci-templates/docs.gitlab-ci.yml` requires `sphinx`.
+2. `python` pre-installed in `image` (default image: `python3.7`).
+3. `build`, `test`, `deploy` ci stages. (included in [default stages](https://docs.gitlab.com/ee/ci/yaml/#stages))
 
-### How to use
+`poetry` is installed in `default:before_script`, beware that if you have to override `before_script`.
 
-1. add the following to `.gitlab-ci.yml`
+### How to use in your project
 
-    ```yaml
-    include:
-      - project: 'DYSK_Labs/pypi-project-template'
-        ref: <Ref> (e.g. branch or commit or tag)
-        file:
-          - ci-templates/test.gitlab-ci.yml
-          - ci-templates/deploy.gitlab-ci.yml
+Example `.gitlab-ci.yml`:
 
-    build:
-      extends: .build_template
-      # override example
-      before_script:
-        - !reference [default, before_script]
-        - some new stuff
-    test:
-      extends: .test_template
+```yaml
+include:
+  - project: 'DYSK_Labs/pypi-project-template'
+    ref: 3.x  # or other branch / commit / tag
+    file:
+      - ci-templates/test.gitlab-ci.yml
+      - ci-templates/publish.gitlab-ci.yml
+      - ci-templates/docs.gitlab-ci.yml
+```
 
-    lint:
-      extends: .lint_template
+### How to override jobs
 
-    publish:
-      extends: .publish_template
+All jobs in templates extend hidden jobs with leading `.`. When override jobs, always reference to the hidden one to avoid circular reference. 
 
-    ```
+```yaml
+build:
+  script:
+    - echo "before"
+    - !reference [.build, script]
+    - echo "after"
+```
 
 ## Shared Configuration
+
+Configuration includes `flake8`, `isort` & `coverage`.
 
 [nitpick](https://nitpick.readthedocs.io/en/latest/index.html)
 
@@ -53,9 +55,10 @@ add the following section to your `.nitpick.toml` or `pyproject.toml` ([detail](
 ```toml
 [tool.nitpick]
 style = [
-    "https://github.com/aetherAI/Pypi-Project-Template/blob/<ref>/nitpick-style/lint.toml",
+    # don't forget to replace the <REF>
+    "https://github.com/aetherAI/Pypi-Project-Template/blob/<REF>/nitpick-style/lint.toml",
     # ...,  optional, will override the former
-    "https://github.com/aetherAI/Pypi-Project-Template/blob/<ref>/nitpick-style/coverage.toml",
+    "https://github.com/aetherAI/Pypi-Project-Template/blob/<REF>/nitpick-style/coverage.toml",
 ]
 cache = "never"
 ```
