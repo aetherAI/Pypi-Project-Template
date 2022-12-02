@@ -3,6 +3,11 @@ include:
   - local: ci-templates/publish.gitlab-ci.yml
   - template: Workflows/MergeRequest-Pipelines.gitlab-ci.yml
 
+build:
+  before_script:
+    - echo "before install poetry"
+    - !reference [default, before_script]
+
 test:
   script:
     - echo "example override"
