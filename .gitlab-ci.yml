@@ -1,24 +1,13 @@
 include:
   - local: ci-templates/test.gitlab-ci.yml
-  - local: ci-templates/deploy.gitlab-ci.yml
+  - local: ci-templates/publish.gitlab-ci.yml
   - template: Workflows/MergeRequest-Pipelines.gitlab-ci.yml
 
-build:
-  extends: .build_template
-
 test:
-  extends: .test_template
-
-lint:
-  extends: .lint_template
-  rules:
-    - if: $CI_COMMIT_TAG
-      when: never
-    - when: on_success
+  script:
+    - echo "example override"
+    - !reference [.test, script]
 
 publish:
-  extends: .publish_template
   rules:
-    - if: $CI_COMMIT_TAG
-      when: never
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - when: never

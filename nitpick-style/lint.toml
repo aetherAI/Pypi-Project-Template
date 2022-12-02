@@ -45,4 +45,4 @@ balanced_wrapping = true
 lines_after_imports = 2
 
 ["pyproject.toml".tool.poetry.dev-dependencies]
-wemake-python-styleguide = ">=0.15"
+wemake-python-styleguide = ">=0.17"
