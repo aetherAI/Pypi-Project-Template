@@ -1,7 +1,5 @@
 include:
   - local: ci-templates/install-poetry-before-script.gitlab-ci.yml
-  # https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Workflows/MergeRequest-Pipelines.gitlab-ci.yml
-  - template: Workflows/MergeRequest-Pipelines.gitlab-ci.yml
 
 .build:
   stage: build
