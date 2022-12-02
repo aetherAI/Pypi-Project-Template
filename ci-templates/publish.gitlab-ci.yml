@@ -1,7 +1,7 @@
 include:
   - local: ci-templates/install-poetry-before-script.gitlab-ci.yml
 
-varaibles:
+variables:
   POETRY_REPOSITORIES_PROJECT_URL: ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/pypi
   POETRY_HTTP_BASIC_PROJECT_USERNAME: gitlab-ci-token
   POETRY_HTTP_BASIC_DYSK_LABS_PASSWORD: ${CI_JOB_TOKEN}

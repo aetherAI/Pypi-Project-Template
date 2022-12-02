@@ -1,6 +1,6 @@
 include:
   - local: ci-templates/test.gitlab-ci.yml
-  - local: ci-templates/deploy.gitlab-ci.yml
+  - local: ci-templates/publish.gitlab-ci.yml
   - template: Workflows/MergeRequest-Pipelines.gitlab-ci.yml
 
 test:
