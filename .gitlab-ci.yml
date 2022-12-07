@@ -24,19 +24,23 @@ pages:
     PAGES_BRANCH_NAME: pages
   before_script: []
   script:
+    - pip install sphinx sphinx-immaterial
     - apt update && apt -qqy install git
-    - mkdir public
+    - sphinx-build -D version=$CI_COMMIT_TAG docs/source public/$CI_COMMIT_TAG
     - git config --global user.email $GITLAB_USER_EMAIL
     - git config --global user.name $GITLAB_USER_NAME
     - vp=public/versions.json
     - if [[ $(git branch --list $PAGES_BRANCH_NAME) ]]; then
+        echo "find existing branch '${PAGES_BRANCH_NAME}'";
         git checkout $PAGES_BRANCH_NAME;
       else
+        echo "no branch named '${PAGES_BRANCH_NAME}', create a new one";
         git checkout --orphan $PAGES_BRANCH_NAME;
         git rm -rf .;
         echo "[]" > $vp;
+        echo "/ /${CI_COMMIT_TAG}" > _redirects;
       fi
-    - python -c "import json; lst = json.load(open('${vp}')); json.dump([dict(version='${CI_COMMIT_TAG}'), *lst], open('${vp}', 'w'), indent=4)"
+    - python -c "import json; lst = json.load(open('${vp}')); new_ver = dict(version='${CI_COMMIT_TAG}', title='${CI_COMMIT_TAG}', aliases=[]); json.dump([new_ver, *lst], open('${vp}', 'w'), indent=4)"
     - git add public
     - git commit -m "Add version $CI_COMMIT_TAG"
     - git remote set-url origin "https://${GITLAB_USER_NAME}:${CI_PUSH_TOKEN}@gitlab.com/$CI_PROJECT_PATH.git"
