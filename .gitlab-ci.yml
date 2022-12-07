@@ -21,11 +21,13 @@ pages:
   rules:
     - if: $CI_COMMIT_TAG
   variables:
-    PAGES_BRANCH_NAME: pages
+    PAGES_BRANCH_NAME: my-pages
   before_script: []
   script:
+    - pip install sphinx sphinx-immaterial
     - apt update && apt -qqy install git
     - mkdir public
+    - sphinx-build -D version=$CI_COMMIT_TAG docs/source public/$CI_COMMIT_TAG
     - git config --global user.email $GITLAB_USER_EMAIL
     - git config --global user.name $GITLAB_USER_NAME
     - vp=public/versions.json
@@ -35,8 +37,9 @@ pages:
         git checkout --orphan $PAGES_BRANCH_NAME;
         git rm -rf .;
         echo "[]" > $vp;
+        echo "<html><html lang=\"en\" class=\"no-js\"><head><meta http-equiv=\"Refresh\" content=\"0; url='master'\" /></head></html>" > public/index.html;
       fi
-    - python -c "import json; lst = json.load(open('${vp}')); json.dump([dict(version='${CI_COMMIT_TAG}'), *lst], open('${vp}', 'w'), indent=4)"
+    - python -c "import json; lst = json.load(open('${vp}')); new_ver = dict(version='${CI_COMMIT_TAG}', latest='${CI_COMMIT_TAG}', aliases=[]); json.dump([new_ver, *lst], open('${vp}', 'w'), indent=4)"
     - git add public
     - git commit -m "Add version $CI_COMMIT_TAG"
     - git remote set-url origin "https://${GITLAB_USER_NAME}:${CI_PUSH_TOKEN}@gitlab.com/$CI_PROJECT_PATH.git"

@@ -30,6 +30,7 @@ html_theme = 'sphinx_immaterial'
 html_static_path = ['_static']
 html_theme_options = {
     # Set the name of the project to appear in the navigation.
+    'nav_title': project,
     'palette': [
         {
             'scheme': 'slate',
