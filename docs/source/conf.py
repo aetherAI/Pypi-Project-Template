@@ -26,11 +26,11 @@ exclude_patterns = []
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
+html_title = project
 html_theme = 'sphinx_immaterial'
 html_static_path = ['_static']
 html_theme_options = {
     # Set the name of the project to appear in the navigation.
-    'nav_title': project,
     'palette': [
         {
             'scheme': 'slate',
@@ -38,7 +38,6 @@ html_theme_options = {
                 'icon': 'material/brightness-4',
                 'name': 'Switch to light mode',
             },
-            'primary': 'cyan',
         },
         {
             'scheme': 'default',
@@ -46,16 +45,7 @@ html_theme_options = {
                 'icon': 'material/brightness-7',
                 'name': 'Switch to dark mode',
             },
-            'primary': 'cyan',
         },
-    ],
-
-    # Set the repo location to get a badge with stats
-    'features': [
-        'navigation.expand',
-        'navigation.indexes',
-        'navigation.top',
-        'search.highlight',
     ],
     'version_dropdown': True,
 }

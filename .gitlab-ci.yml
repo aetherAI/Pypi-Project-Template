@@ -33,19 +33,38 @@ pages:
     - git branch -D $PAGES_BRANCH_NAME || true
     - git checkout --orphan $PAGES_BRANCH_NAME
     - git rm -rf .
-    - vp=public/versions.json
     - if [[ $(git ls-remote --heads origin $PAGES_BRANCH_NAME) ]]; then
         echo "find existing branch '${PAGES_BRANCH_NAME}'";
         git pull origin $PAGES_BRANCH_NAME;
       else
         echo "no branch named '${PAGES_BRANCH_NAME}', do initialization";
-        echo "[]" > $vp;
+        echo "[]" > public/versions.json;
         echo "/${CI_PROJECT_NAME}/ /${CI_PROJECT_NAME}/${CI_COMMIT_TAG}" > public/_redirects;
+        python -c "
+import sys, yaml
+branch_name = sys.argv[1]
+yaml.safe_dump(
+  dict(
+    pages=dict(
+      scripts=[],
+      only=[branch_name],
+      artifacts=dict(paths=['public'])
+    ),
+  ),
+  sys.stdout,
+)" $PAGES_BRANCH_NAME > .gitlab-ci.yaml;
       fi
-    - python -c "import json; lst = json.load(open('${vp}')); new_ver = dict(version='${CI_COMMIT_TAG}', title='${CI_COMMIT_TAG}', aliases=[]); json.dump([new_ver, *lst], open('${vp}', 'w'), indent=4)"
+
+    - python -c "
+import json, sys
+p, v = sys.argv[1:3]
+lst = json.load(open(p))
+new_ver = version=v, title=v, aliases=[])
+json.dump([new_ver, *lst], open(p, 'w'), indent=4)" public/versions.json $CI_COMMIT_TAG
+
     - git add public
     - git commit -m "Add version $CI_COMMIT_TAG"
-    - git push --set-upstream origin $PAGES_BRANCH_NAME -o ci.skip
+    - git push --set-upstream origin $PAGES_BRANCH_NAME
   artifacts:
     paths:
     - public
