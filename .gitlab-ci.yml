@@ -25,8 +25,10 @@ update-pages:
   before_script: []
   script:
     - pip install sphinx sphinx-immaterial
-    - apt update && apt -qqy install git
     - sphinx-build -D version=$CI_COMMIT_TAG docs/source public/$CI_COMMIT_TAG
+    - apt-get update && apt-get install -qqy git wget
+    - wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq
+    - chmod +x /usr/bin/yq
     - git config --global user.email $GITLAB_USER_EMAIL
     - git config --global user.name $GITLAB_USER_NAME
     - git remote set-url origin "https://${GITLAB_USER_NAME}:${CI_PUSH_TOKEN}@gitlab.com/$CI_PROJECT_PATH.git"
@@ -35,15 +37,24 @@ update-pages:
     - git rm -rf .
     - |-
       if [[ $(git ls-remote --heads origin $PAGES_BRANCH_NAME) ]]; then
-        echo "find existing branch '${PAGES_BRANCH_NAME}'";
-        git pull origin $PAGES_BRANCH_NAME;
+        echo "find existing branch '${PAGES_BRANCH_NAME}'"
+        git pull origin $PAGES_BRANCH_NAME
       else
-        echo "no branch named '${PAGES_BRANCH_NAME}', do initialization";
+        echo "no branch named '${PAGES_BRANCH_NAME}', do initialization"
         echo "[]" > public/versions.json
         echo "/${CI_PROJECT_NAME}/ /${CI_PROJECT_NAME}/${CI_COMMIT_TAG}" > public/_redirects
-        echo -e "pages:\n  image: python:3.7\n  script:\n    - echo 'generate pages'\n  artifacts:\n    paths:\n      - public" > .gitlab-ci.yml;
+        yq -n '
+          .pages.image = "python:3.7"
+          | .pages.script[0] = "echo \"generate pages\""
+          | .pages.artifact.paths[0] = "public"
+        ' > .gitlab-ci.yml
       fi
-    - python -c "import json, sys; p, v = sys.argv[1:3]; lst = json.load(open(p)); new_ver = dict(version=v, title=v, aliases=[]); json.dump([new_ver, *lst], open(p, 'w'), indent=4)" public/versions.json $CI_COMMIT_TAG
+    - |
+      v=$CI_COMMIT_TAG yq -i -o json '. = [{
+        "version": strenv(v),
+        "title": strenv(v),
+        "aliases": []}] + .
+      ' public/versions.json
     - git add public .gitlab-ci.yml
     - git commit -m "Add version $CI_COMMIT_TAG"
     - git push --set-upstream origin $PAGES_BRANCH_NAME
