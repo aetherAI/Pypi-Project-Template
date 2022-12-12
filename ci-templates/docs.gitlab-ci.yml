@@ -38,7 +38,7 @@ variables:
         git pull origin $PAGES_BRANCH_NAME
       else
         echo "no branch named '${PAGES_BRANCH_NAME}', do initialization"
-        echo "/${CI_PROJECT_NAME}/ /${CI_PROJECT_NAME}/${CI_DEFAULT_BRANCH}" > public/_redirects
+        echo "/${CI_PROJECT_NAME}/ /${CI_PROJECT_NAME}/${CI_DEFAULT_BRANCH} 302" > public/_redirects
         yq -n '
           .pages.image = "python:3.7"
           | .pages.script[0] = "echo \"generate pages\""
