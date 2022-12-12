@@ -1,6 +1,10 @@
 include:
   - local: ci-templates/install-poetry-before-script.gitlab-ci.yml
 
+variables:
+  STABLE_VERSION_PATTERN: '/^v?\d+\.\d+\.\d+$/'
+  PAGES_BRANCH_NAME: pages
+
 .test-docs:
   stage: test
   rules:
@@ -12,9 +16,6 @@ include:
 
 .update-pages:
   stage: deploy
-  variables:
-    PAGES_BRANCH_NAME: pages
-    STABLE_VERSION_PATTERN: ^v?\d+.\d+.\d+$
   rules:
     - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_COMMIT_TAG =~ $STABLE_VERSION_PATTERN) && $CI_PUSH_TOKEN
   before_script: []
