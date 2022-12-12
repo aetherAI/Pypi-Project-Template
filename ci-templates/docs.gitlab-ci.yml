@@ -18,7 +18,6 @@ variables:
   stage: deploy
   rules:
     - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_COMMIT_TAG =~ $STABLE_VERSION_PATTERN) && $CI_PUSH_TOKEN
-  before_script: []
   script:
     - pip install sphinx sphinx-immaterial
     - poetry run sphinx-build -aE -D version=$CI_COMMIT_REF_NAME docs/source public/$CI_COMMIT_REF_NAME
