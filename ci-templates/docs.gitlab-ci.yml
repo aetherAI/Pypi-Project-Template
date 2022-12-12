@@ -42,7 +42,7 @@ variables:
         yq -n '
           .pages.image = "python:3.7"
           | .pages.script[0] = "echo \"generate pages\""
-          | .pages.artifact.paths[0] = "public"
+          | .pages.artifacts.paths[0] = "public"
         ' > .gitlab-ci.yml
         yq -n -o json '[{
           "version": strenv(CI_DEFAULT_BRANCH),
