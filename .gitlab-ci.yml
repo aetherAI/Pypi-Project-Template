@@ -18,20 +18,23 @@ publish:
     - echo "publish as $CI_COMMIT_TAG"
 
 update-pages:
-  rules:
-    - if: $CI_COMMIT_TAG && $CI_PUSH_TOKEN
   variables:
     PAGES_BRANCH_NAME: pages
+    STABLE_VERSION_PATTERN: ^v?\d+.\d+.\d+$
+  rules:
+    - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_COMMIT_TAG =~ $STABLE_VERSION_PATTERN) && $CI_PUSH_TOKEN
   before_script: []
   script:
     - pip install sphinx sphinx-immaterial
-    - sphinx-build -D version=$CI_COMMIT_TAG docs/source public/$CI_COMMIT_TAG
-    - apt-get update && apt-get install -qqy git wget
-    - wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq
-    - chmod +x /usr/bin/yq
+    - sphinx-build -aE -D version=$CI_COMMIT_REF_NAME docs/source public/$CI_COMMIT_REF_NAME
+    # install git & yq
+    - apt-get update && apt-get install -qqy --no-install-recommends git wget
+    - wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq && chmod +x /usr/bin/yq
+    # config git
     - git config --global user.email $GITLAB_USER_EMAIL
     - git config --global user.name $GITLAB_USER_NAME
     - git remote set-url origin "https://${GITLAB_USER_NAME}:${CI_PUSH_TOKEN}@gitlab.com/$CI_PROJECT_PATH.git"
+    # setup $PAGES_BRANCH_NAME branch
     - git branch -D $PAGES_BRANCH_NAME || true
     - git checkout --orphan $PAGES_BRANCH_NAME
     - git rm -rf .
@@ -41,20 +44,29 @@ update-pages:
         git pull origin $PAGES_BRANCH_NAME
       else
         echo "no branch named '${PAGES_BRANCH_NAME}', do initialization"
-        echo "[]" > public/versions.json
-        echo "/${CI_PROJECT_NAME}/ /${CI_PROJECT_NAME}/${CI_COMMIT_TAG}" > public/_redirects
+        echo "/${CI_PROJECT_NAME}/ /${CI_PROJECT_NAME}/${CI_DEFAULT_BRANCH}" > public/_redirects
         yq -n '
           .pages.image = "python:3.7"
           | .pages.script[0] = "echo \"generate pages\""
           | .pages.artifact.paths[0] = "public"
         ' > .gitlab-ci.yml
+        yq -n -o json '[{
+          "version": strenv(CI_DEFAULT_BRANCH),
+          "title": strenv(CI_DEFAULT_BRANCH),
+          "aliases": []
+        }]' > public/versions.json
       fi
-    - |
-      v=$CI_COMMIT_TAG yq -i -o json '. = [{
-        "version": strenv(v),
-        "title": strenv(v),
-        "aliases": []}] + .
-      ' public/versions.json
+    - |-
+      if [[ -v CI_COMMIT_TAG ]]; then
+        yq -i -o json '
+        . += [{
+          "version": strenv(CI_COMMIT_TAG),
+          "title": strenv(CI_COMMIT_TAG),
+          "aliases": []
+        }]
+        ' public/versions.json
+        python -c "import json, packaging.version as pv; p = 'public/versions.json'; lst = sorted(json.load(open(p)), key=lambda d: pv.parse(d['version']) if d['version'] != '${CI_DEFAULT_BRANCH}' else pv.Infinity, reverse=True); json.dump(lst, open(p, 'w'), indent=2)"
+      fi
     - git add public .gitlab-ci.yml
-    - git commit -m "Add version $CI_COMMIT_TAG"
+    - git commit -m "Deployed ${CI_COMMIT_SHORT_SHA} to ${CI_COMMIT_REF_NAME}"
     - git push --set-upstream origin $PAGES_BRANCH_NAME
