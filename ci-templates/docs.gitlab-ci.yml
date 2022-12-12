@@ -42,6 +42,7 @@ variables:
         git pull origin $PAGES_BRANCH_NAME
       else
         echo "no branch named '${PAGES_BRANCH_NAME}', do initialization"
+        mkdir public
         echo "/${CI_PROJECT_NAME}/ /${CI_PROJECT_NAME}/${CI_DEFAULT_BRANCH} 302" > public/_redirects
         yq -n '
           .pages.image = "python:3.7"
