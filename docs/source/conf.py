@@ -5,6 +5,8 @@
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
+import os
+
 
 project = 'example_project'
 copyright = '2022, Jsaon Lin'
@@ -47,5 +49,15 @@ html_theme_options = {
             },
         },
     ],
+    'repo_url': 'https://gitlab.com/DYSK_Labs/pypi-project-template',
+    'repo_name': 'DYSK_Labs/pypi-project-template',
+    'repo_type': 'gitlab',
+    'icon': {
+        'repo': 'fontawesome/brands/gitlab',
+    },
     'version_dropdown': True,
 }
+
+ref_name = os.getenv('CI_COMMIT_REF_NAME')
+if ref_name:
+    html_theme_options['edit_uri'] = f'edit/{ref_name}/docs/source/'
