@@ -6,7 +6,7 @@ variables:
 
 .install_poetry: &install_poetry
   - >
-    if ! command -v poetry &> /dev/null; then
+    if ! test -d $POETRY_HOME; then
       echo "poetry not found, start installing..."
       apt-get update && apt-get install -qqy --no-install-recommends curl
       apt-get install -qqy --no-install-recommends python3.7-venv || true
