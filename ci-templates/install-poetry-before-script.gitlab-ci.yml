@@ -8,8 +8,8 @@ variables:
   - >
     if ! command -v poetry &> /dev/null; then
       echo "poetry not found, start installing..."
-      apt update && apt install -y curl
-      apt install -y python3.7-venv || true
+      apt-get update && apt-get install -qqy --no-install-recommends curl
+      apt-get install -qqy --no-install-recommends python3.7-venv || true
       curl -sSL https://install.python-poetry.org | python3 - -y
     else
       echo "find poetry at $POETRY_HOME, skip installing"
