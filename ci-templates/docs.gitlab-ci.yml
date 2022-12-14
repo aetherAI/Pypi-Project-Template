@@ -64,7 +64,8 @@ variables:
           "aliases": []
         }]
         ' public/versions.json
-        poetry run python -c "import json, packaging.version as pv; p = 'public/versions.json'; lst = sorted(json.load(open(p)), key=lambda d: pv.parse(d['version']) if d['version'] != '${CI_DEFAULT_BRANCH}' else pv.Infinity, reverse=True); json.dump(lst, open(p, 'w'), indent=2)"
+        pip install packaging
+        python -c "import json, packaging.version as pv; p = 'public/versions.json'; lst = sorted(json.load(open(p)), key=lambda d: pv.parse(d['version']) if d['version'] != '${CI_DEFAULT_BRANCH}' else pv.Infinity, reverse=True); json.dump(lst, open(p, 'w'), indent=2)"
       fi
     - git add public .gitlab-ci.yml
     - git commit -m "Deployed ${CI_COMMIT_SHORT_SHA} to ${CI_COMMIT_REF_NAME}"
