@@ -14,6 +14,9 @@ variables:
     - when: on_success
   script:
     - poetry run sphinx-build docs/source docs/build/html
+  artifacts:
+    paths:
+      - docs/build/
 
 .update-pages:
   stage: deploy
