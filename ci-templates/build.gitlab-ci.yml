@@ -17,7 +17,7 @@ include:
       - $POETRY_CACHE_DIR
       - $POETRY_HOME
       - $POETRY_VIRTUALENVS_PATH
-    expire_in: 60 mins
+    expire_in: 1 day
 
 build:
   extends: .build
