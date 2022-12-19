@@ -22,6 +22,10 @@ variables:
   script:
     - *install_build_requires
     - poetry publish --build -r ci_project --dry-run
+  artifacts:
+    paths:
+      - dist
+    expire_in: 1 day
 
 .publish:
   stage: deploy

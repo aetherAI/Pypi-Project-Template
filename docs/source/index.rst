@@ -7,7 +7,7 @@
 Overview
 ========
 
-Document for version: |version|
+Document for version: |release|
 
 .. toctree::
     :maxdepth: 2
