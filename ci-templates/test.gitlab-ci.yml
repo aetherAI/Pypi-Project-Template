@@ -3,7 +3,6 @@ include:
   - local: ci-templates/build.gitlab-ci.yml
 
 .test:
-  stage: test
   rules:
     - if: $CI_COMMIT_TAG
       when: never
@@ -14,7 +13,6 @@ include:
   coverage: '/^TOTAL.+?(\d+\%)$/'
 
 .lint:
-  stage: test
   rules:
     - if: $CI_COMMIT_TAG
       when: never
@@ -26,7 +24,9 @@ include:
     - poetry run flake8 --extend-exclude .poetry
 
 test:
+  stage: test
   extends: .test
 
 lint:
+  stage: test
   extends: .lint

@@ -2,7 +2,6 @@ include:
   - local: ci-templates/install-poetry-before-script.gitlab-ci.yml
 
 .build:
-  stage: build
   script:
     - poetry install
   cache:
@@ -20,6 +19,7 @@ include:
     expire_in: 1 day
 
 build:
+  stage: build
   extends:
     - .install_poetry_before_script
     - .build
