@@ -19,6 +19,7 @@ variables:
       when: never
     - when: on_success
   script:
+    - !reference [.snippet, install-poetry]
     - *install_build_requires
     - poetry publish --build -r ci_project --dry-run
   artifacts:
@@ -34,6 +35,7 @@ variables:
     # many false positive but easy, just let the pipeline fail if invalid
     - if: $CI_COMMIT_TAG =~ /^v?\d+/
   script:
+    - !reference [.snippet, install-poetry]
     - *install_build_requires
     - echo "publish as $CI_COMMIT_TAG"
     - poetry version $CI_COMMIT_TAG
@@ -41,12 +43,8 @@ variables:
 
 test-publish:
   stage: test
-  extends:
-    - .install_poetry_before_script
-    - .test-publish
+  extends: .test-publish
 
 publish:
   stage: deploy
-  extends:
-    - .install_poetry_before_script
-    - .publish
+  extends: .publish

@@ -12,6 +12,7 @@ variables:
       when: never
     - when: on_success
   script:
+    - !reference [.snippet, install-poetry]
     - poetry run sphinx-build docs/source docs/build/html
   artifacts:
     paths:
@@ -21,6 +22,7 @@ variables:
   rules:
     - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_COMMIT_TAG =~ $STABLE_VERSION_PATTERN) && $CI_PUSH_TOKEN
   script:
+    - !reference [.snippet, install-poetry]
     - poetry run sphinx-build -aE -D release=$CI_COMMIT_REF_NAME docs/source public/$CI_COMMIT_REF_NAME
     # install git & yq
     - apt-get update && apt-get install -qqy --no-install-recommends git wget
@@ -74,13 +76,9 @@ variables:
 
 test-docs:
   stage: test
-  extends:
-    - .install_poetry_before_script
-    - .test-docs
+  extends: .test-docs
 
 update-pages:
   stage: deploy
   resource_group: pages
-  extends:
-    - .install_poetry_before_script
-    - .update-pages
+  extends: .update-pages

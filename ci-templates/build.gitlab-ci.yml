@@ -3,6 +3,7 @@ include:
 
 .build:
   script:
+    - !reference [.snippet, install-poetry]
     - poetry install
   cache:
     paths:
@@ -20,6 +21,4 @@ include:
 
 build:
   stage: build
-  extends:
-    - .install_poetry_before_script
-    - .build
+  extends: .build

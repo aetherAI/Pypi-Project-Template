@@ -4,22 +4,19 @@ variables:
   POETRY_VIRTUALENVS_PATH: $CI_PROJECT_DIR/venv
   POETRY_HOME: $CI_PROJECT_DIR/.poetry
 
-.install_poetry: &install_poetry
-  - >
-    if ! test -d $POETRY_HOME; then
-      echo "poetry not found, start installing..."
-      apt-get update && apt-get install -qqy --no-install-recommends curl
-      curl -sSL https://install.python-poetry.org | python3 - -y
-    else
-      echo "find poetry at $POETRY_HOME, skip installing"
-    fi
-  - export PATH="$POETRY_HOME/bin:$PATH" >> $HOME/.bashrc
-  - source $HOME/.bashrc
-  - poetry -V
+.snippet:
+  install-poetry:
+    - >
+      if ! test -d $POETRY_HOME; then
+        echo "poetry not found, start installing..."
+        apt-get update && apt-get install -qqy --no-install-recommends curl
+        curl -sSL https://install.python-poetry.org | python3 - -y
+      else
+        echo "find poetry at $POETRY_HOME, skip installing"
+      fi
+    - export PATH="$POETRY_HOME/bin:$PATH" >> $HOME/.bashrc
+    - source $HOME/.bashrc
+    - poetry -V
 
 default:
   image: python:3.7
-
-.install_poetry_before_script:
-  before_script:
-    - *install_poetry

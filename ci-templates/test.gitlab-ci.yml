@@ -8,6 +8,7 @@ include:
       when: never
     - when: on_success
   script:
+    - !reference [.snippet, install-poetry]
     - poetry run pytest --version
     - poetry run pytest -vv
   coverage: '/^TOTAL.+?(\d+\%)$/'
@@ -20,17 +21,14 @@ include:
       - "**/*.py"
   # lint in venv in case there's any lint extension
   script:
+    - !reference [.snippet, install-poetry]
     - poetry run flake8 --version
     - poetry run flake8 --extend-exclude .poetry
 
 test:
   stage: test
-  extends:
-    - .install_poetry_before_script
-    - .test
+  extends: .test
 
 lint:
   stage: test
-  extends:
-    - .install_poetry_before_script
-    - .lint
+  extends: .lint
