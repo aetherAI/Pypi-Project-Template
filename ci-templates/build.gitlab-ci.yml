@@ -1,10 +1,10 @@
 include:
-  - local: ci-templates/install-poetry-before-script.gitlab-ci.yml
+  - local: ci-templates/snippets.gitlab-ci.yml
 
 .build:
-  stage: build
   script:
-    - poetry install
+    - !reference [.snippets, install-poetry]
+    - poetry install -vv
   cache:
     paths:
       - $POETRY_VIRTUALENVS_PATH
@@ -20,4 +20,5 @@ include:
     expire_in: 1 day
 
 build:
+  stage: build
   extends: .build

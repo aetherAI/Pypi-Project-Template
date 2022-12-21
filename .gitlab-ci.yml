@@ -4,15 +4,24 @@ include:
   - local: ci-templates/docs.gitlab-ci.yml
   - template: Workflows/MergeRequest-Pipelines.gitlab-ci.yml
 
-build:
+default:
   before_script:
-    - echo "before install poetry"
-    - !reference [default, before_script]
+    - echo "before_script"
+  after_script:
+    - echo "after_script"
+
+build:
+  script:
+    - echo "before build"
+    - !reference [.build, script]
 
 test:
   script:
-    - echo "example override"
-    - !reference [.test, script]
+    - echo "before install poetry"
+    - !reference [.snippets, install-poetry]
+    - echo "after install poetry"
+    - poetry run pytest --version
+    - poetry run pytest -vv
 
 publish:
   script:

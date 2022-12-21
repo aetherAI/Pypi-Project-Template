@@ -1,0 +1,27 @@
+variables:
+  PIP_CACHE_DIR: $CI_PROJECT_DIR/.cache/pip
+  POETRY_CACHE_DIR: $CI_PROJECT_DIR/.cache/pypoetry
+  POETRY_VIRTUALENVS_PATH: $CI_PROJECT_DIR/venv
+  POETRY_HOME: $CI_PROJECT_DIR/.poetry
+
+default:
+  image: python:3.7
+
+.snippets:
+  install-poetry:
+    - >
+      if ! test -d $POETRY_HOME; then
+        echo "poetry not found, start installing..."
+        apt-get update && apt-get install -qqy --no-install-recommends curl
+        curl -sSL https://install.python-poetry.org | python3 - -y
+      else
+        echo "find poetry at $POETRY_HOME, skip installing"
+      fi
+    - export PATH="$POETRY_HOME/bin:$PATH" >> $HOME/.bashrc
+    - source $HOME/.bashrc
+    - poetry -V
+  install-build-requires:
+    - poetry run pip install toml
+    - build_requires=`poetry run python -c "import toml; print(*toml.load('pyproject.toml')['build-system']['requires'])"`
+    - echo "build-system requires $build_requires"
+    - poetry run pip install $build_requires

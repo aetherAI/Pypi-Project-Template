@@ -29,8 +29,11 @@ exclude_patterns = []
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 html_title = project
-html_theme = 'sphinx_immaterial'
 html_static_path = ['_static']
+
+# Sphinx-Immaterial theme options
+# https://jbms.github.io/sphinx-immaterial/customization.html#
+html_theme = 'sphinx_immaterial'
 html_theme_options = {
     # Set the name of the project to appear in the navigation.
     'palette': [
