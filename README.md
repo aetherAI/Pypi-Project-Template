@@ -9,8 +9,6 @@ This project provides snippets for python library developers.
 - [Shared Configuration](#shared-configuration)
 - [Auto Docstring Template](#auto-docstring-template)
 
----
-
 ## GitLab CI Templates
 
 Template of `gitlab.ci.yml` for pypi package CI/CD.
@@ -67,13 +65,11 @@ test:
 
 `before_script` & `after_script` are not defined by templates. Feel free to add commands like `apt-get install`.
 
-### Example Docs Site
+### Docs Site
 
-The result of docs pipeline: <https://dysk_labs.gitlab.io/pypi-project-template/>
+The generated docs site will be served by [GitLab Pages](https://docs.gitlab.com/ee/user/project/pages/), located at `https://dysk_labs.gitlab.io/${project_name}`, check the [demo site](https://dysk_labs.gitlab.io/pypi-project-template/).
 
 It's also included in `test-docs` job's artifact (only single version).
-
----
 
 ## Shared Configuration
 
@@ -104,8 +100,6 @@ finally, run:
 $ nitpick check -v
 $ nitpick fix -v
 ```
-
----
 
 ## Auto Docstring Template
 
