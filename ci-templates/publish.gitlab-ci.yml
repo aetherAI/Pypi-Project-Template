@@ -42,7 +42,11 @@ variables:
     - poetry publish --build -r ci_project
 
 test-publish:
-  extends: .test-publish
+  extends:
+    - .install_poetry_before_script
+    - .test-publish
 
 publish:
-  extends: .publish
+  extends:
+    - .install_poetry_before_script
+    - .publish

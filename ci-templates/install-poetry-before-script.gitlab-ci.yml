@@ -19,5 +19,7 @@ variables:
 
 default:
   image: python:3.7
+
+.install_poetry_before_script:
   before_script:
     - *install_poetry

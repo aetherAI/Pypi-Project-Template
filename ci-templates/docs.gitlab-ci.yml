@@ -76,7 +76,11 @@ variables:
     - git push --set-upstream origin $PAGES_BRANCH_NAME
 
 test-docs:
-  extends: .test-docs
+  extends:
+    - .install_poetry_before_script
+    - .test-docs
 
 update-pages:
-  extends: .update-pages
+  extends:
+    - .install_poetry_before_script
+    - .update-pages

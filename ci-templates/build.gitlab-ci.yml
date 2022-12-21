@@ -20,4 +20,6 @@ include:
     expire_in: 1 day
 
 build:
-  extends: .build
+  extends:
+    - .install_poetry_before_script
+    - .build
