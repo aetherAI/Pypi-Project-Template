@@ -20,3 +20,8 @@ default:
     - export PATH="$POETRY_HOME/bin:$PATH" >> $HOME/.bashrc
     - source $HOME/.bashrc
     - poetry -V
+  install-build-requires:
+    - poetry run pip install toml
+    - build_requires=`poetry run python -c "import toml; print(*toml.load('pyproject.toml')['build-system']['requires'])"`
+    - echo "build-system requires $build_requires"
+    - poetry run pip install $build_requires
