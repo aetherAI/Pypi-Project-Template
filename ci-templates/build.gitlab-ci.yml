@@ -1,10 +1,10 @@
 include:
-  - local: ci-templates/install-poetry-before-script.gitlab-ci.yml
+  - local: ci-templates/snippets.gitlab-ci.yml
 
 .build:
   script:
-    - !reference [.snippet, install-poetry]
-    - poetry install
+    - !reference [.snippets, install-poetry]
+    - poetry install -vv
   cache:
     paths:
       - $POETRY_VIRTUALENVS_PATH

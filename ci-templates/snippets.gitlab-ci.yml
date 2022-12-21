@@ -4,7 +4,10 @@ variables:
   POETRY_VIRTUALENVS_PATH: $CI_PROJECT_DIR/venv
   POETRY_HOME: $CI_PROJECT_DIR/.poetry
 
-.snippet:
+default:
+  image: python:3.7
+
+.snippets:
   install-poetry:
     - >
       if ! test -d $POETRY_HOME; then
@@ -17,6 +20,3 @@ variables:
     - export PATH="$POETRY_HOME/bin:$PATH" >> $HOME/.bashrc
     - source $HOME/.bashrc
     - poetry -V
-
-default:
-  image: python:3.7

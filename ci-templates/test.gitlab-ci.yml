@@ -1,5 +1,5 @@
 include:
-  - local: ci-templates/install-poetry-before-script.gitlab-ci.yml
+  - local: ci-templates/snippets.gitlab-ci.yml
   - local: ci-templates/build.gitlab-ci.yml
 
 .test:
@@ -8,7 +8,7 @@ include:
       when: never
     - when: on_success
   script:
-    - !reference [.snippet, install-poetry]
+    - !reference [.snippets, install-poetry]
     - poetry run pytest --version
     - poetry run pytest -vv
   coverage: '/^TOTAL.+?(\d+\%)$/'
@@ -19,9 +19,9 @@ include:
       when: never
     - changes:
       - "**/*.py"
-  # lint in venv in case there's any lint extension
   script:
-    - !reference [.snippet, install-poetry]
+    - !reference [.snippets, install-poetry]
+    # lint in venv in case there's any lint extension
     - poetry run flake8 --version
     - poetry run flake8 --extend-exclude .poetry
 

@@ -1,10 +1,12 @@
 include:
-  - local: ci-templates/install-poetry-before-script.gitlab-ci.yml
+  - local: ci-templates/snippets.gitlab-ci.yml
 
 variables:
   POETRY_REPOSITORIES_CI_PROJECT_URL: ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/pypi
   POETRY_HTTP_BASIC_CI_PROJECT_USERNAME: gitlab-ci-token
   POETRY_HTTP_BASIC_CI_PROJECT_PASSWORD: ${CI_JOB_TOKEN}
+  # many false positive but easy, just let the pipeline fail if invalid
+  PUBLISH_TAG_PATTERN: '/^v?\d+\.\d+\.\d+/'
 
 # HACK
 .install_build_requires: &install_build_requires
@@ -19,7 +21,7 @@ variables:
       when: never
     - when: on_success
   script:
-    - !reference [.snippet, install-poetry]
+    - !reference [.snippets, install-poetry]
     - *install_build_requires
     - poetry publish --build -r ci_project --dry-run
   artifacts:
@@ -29,13 +31,9 @@ variables:
 
 .publish:
   rules:
-    # examples: 1.x, v1.1.x
-    - if: $CI_COMMIT_TAG =~ /^v?\d+(.*)x$/
-      when: never
-    # many false positive but easy, just let the pipeline fail if invalid
-    - if: $CI_COMMIT_TAG =~ /^v?\d+/
+    - if: $CI_COMMIT_TAG =~ $PUBLISH_TAG_PATTERN
   script:
-    - !reference [.snippet, install-poetry]
+    - !reference [.snippets, install-poetry]
     - *install_build_requires
     - echo "publish as $CI_COMMIT_TAG"
     - poetry version $CI_COMMIT_TAG
