@@ -5,7 +5,7 @@ This project provides snippets for python library developers.
 - [GitLab CI Templates](#gitlab-ci-templates)
   - [Requirements](#requirements)
   - [Usage](#usage)
-  - [Example Docs Site](#example-docs-site)
+  - [Docs Site](#docs-site)
 - [Shared Configuration](#shared-configuration)
 - [Auto Docstring Template](#auto-docstring-template)
 
@@ -70,6 +70,20 @@ test:
 The generated docs site will be served by [GitLab Pages](https://docs.gitlab.com/ee/user/project/pages/), located at `https://dysk_labs.gitlab.io/${project_name}`, check the [demo site](https://dysk_labs.gitlab.io/pypi-project-template/).
 
 It's also included in `test-docs` job's artifact (only single version).
+
+Don't forget to add `version_dropdown` to your `conf.py`:
+
+```python
+extensions = [
+    ...
+    'sphinx_immaterial',
+]
+html_theme = 'sphinx_immaterial'
+html_theme_options = {
+    ...
+    'version_dropdown': True,
+}
+```
 
 ## Shared Configuration
 

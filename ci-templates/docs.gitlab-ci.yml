@@ -61,24 +61,26 @@ variables:
     - >
       if [[ -v CI_COMMIT_TAG ]]; then
 
-        yq -i -o json '
-        . += [{
-          "version": strenv(CI_COMMIT_TAG),
-          "title": strenv(CI_COMMIT_TAG),
-          "aliases": []
-        }]
-        ' public/versions.json
+      yq -i -o json '
+      . += [{
+        "version": strenv(CI_COMMIT_TAG),
+        "title": strenv(CI_COMMIT_TAG),
+        "aliases": []
+      }]
+      ' public/versions.json
 
-        pip install natsort
+      pip install packaging
 
-        python -c "import json, natsort;
-          p = 'public/versions.json';
-          lst = sorted(
-            json.load(open(p)),
-            key=lambda d: natsort.natsort_key(d['version'].lstrip('v')),
-            reverse=True,
-          );
-          json.dump(lst, open(p, 'w'), indent=2)"
+      python -c "import json, os, packaging.version as pv;
+      path = 'public/versions.json';
+      db = os.environ['CI_DEFAULT_BRANCH'];
+      lst = json.load(open(path));
+      lst.sort(
+        key=lambda d: pv.Infinity if d['version'] == db else pv.parse(d['version']),
+        reverse=True,
+      );
+      json.dump(lst, open(path, 'w'), indent=2)"
+
       fi
     - git add public .gitlab-ci.yml
     - git commit -m "Deployed ${CI_COMMIT_SHORT_SHA} to ${CI_COMMIT_REF_NAME}"
