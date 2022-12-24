@@ -69,16 +69,17 @@ variables:
       }]
       ' public/versions.json
 
-      pip install natsort
+      pip install packaging
 
-      python -c "import json, natsort;
-      p = 'public/versions.json';
-      lst = sorted(
-        json.load(open(p)),
-        key=lambda d: natsort.natsort_key(d['version'].lstrip('v')),
+      python -c "import json, os, packaging.version as pv;
+      path = 'public/versions.json';
+      db = os.environ['CI_DEFAULT_BRANCH'];
+      lst = json.load(open(path));
+      lst.sort(
+        key=lambda d: pv.Infinity if d['version'] == db else pv.parse(d['version']),
         reverse=True,
       );
-      json.dump(lst, open(p, 'w'), indent=2)"
+      json.dump(lst, open(path, 'w'), indent=2)"
 
       fi
     - git add public .gitlab-ci.yml
