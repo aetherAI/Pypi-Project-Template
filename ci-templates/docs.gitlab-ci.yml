@@ -58,8 +58,9 @@ variables:
       fi
     - git rm public/$CI_COMMIT_REF_NAME -r --ignore-unmatch
     - git stash pop
-    - |-
+    - >
       if [[ -v CI_COMMIT_TAG ]]; then
+
         yq -i -o json '
         . += [{
           "version": strenv(CI_COMMIT_TAG),
@@ -67,8 +68,17 @@ variables:
           "aliases": []
         }]
         ' public/versions.json
-        pip install packaging
-        python -c "import json, packaging.version as pv; p = 'public/versions.json'; lst = sorted(json.load(open(p)), key=lambda d: pv.parse(d['version']) if d['version'] != '${CI_DEFAULT_BRANCH}' else pv.Infinity, reverse=True); json.dump(lst, open(p, 'w'), indent=2)"
+
+        pip install natsort
+
+        python -c "import json, natsort;
+          p = 'public/versions.json';
+          lst = sorted(
+            json.load(open(p)),
+            key=lambda d: natsort.natsort_key(d['version'].lstrip('v')),
+            reverse=True,
+          );
+          json.dump(lst, open(p, 'w'), indent=2)"
       fi
     - git add public .gitlab-ci.yml
     - git commit -m "Deployed ${CI_COMMIT_SHORT_SHA} to ${CI_COMMIT_REF_NAME}"
