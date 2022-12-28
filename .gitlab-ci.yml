@@ -24,14 +24,16 @@ test:
     - poetry run pytest -vv
 
 publish:
-  script:
-    - echo "publish as $CI_COMMIT_TAG"
+  rules:
+    - if: $CI_MERGE_REQUEST_IID
+      variables:
+        CI_COMMIT_TAG: 0+test.${CI_COMMIT_SHORT_SHA}
+    - !reference [.publish, rules]
 
 update-pages:
   rules:
     - if: $CI_MERGE_REQUEST_IID
       variables:
-        DOCS_TAG_PATTERN: '/.*/'
         CI_COMMIT_TAG: 0+test
         CI_COMMIT_REF_NAME: 0+test
     - !reference [.update-pages, rules]
