@@ -23,10 +23,6 @@ test:
     - poetry run pytest --version
     - poetry run pytest -vv
 
-publish:
-  script:
-    - echo "publish as $CI_COMMIT_TAG"
-
 update-pages:
   rules:
     - if: $CI_MERGE_REQUEST_IID
