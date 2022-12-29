@@ -6,6 +6,7 @@ include:
 
 default:
   before_script:
+    - export
     - echo "before_script"
   after_script:
     - echo "after_script"
