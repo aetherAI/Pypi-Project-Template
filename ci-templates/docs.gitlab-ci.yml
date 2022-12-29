@@ -44,7 +44,8 @@ variables:
       else
         echo "no branch named '${PAGES_BRANCH_NAME}', do initialization"
         mkdir public
-        echo "/${CI_PROJECT_NAME}/ /${CI_PROJECT_NAME}/${CI_DEFAULT_BRANCH} 302" > public/_redirects
+        CI_PAGES_PATH=`python -c "from urllib.parse import urlparse; print(urlparse('$CI_PAGES_URL').path)"`
+        echo "${CI_PAGES_PATH}/ ${CI_PAGES_PATH}/${CI_DEFAULT_BRANCH} 302" > public/_redirects
         yq -n '
           .pages.image = "python:3.7"
           | .pages.script[0] = "echo \"generate pages\""
