@@ -1,11 +1,6 @@
 include:
   - local: ci-templates/install-poetry-before-script.gitlab-ci.yml
 
-variables:
-  POETRY_REPOSITORIES_CI_PROJECT_URL: ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/pypi
-  POETRY_HTTP_BASIC_CI_PROJECT_USERNAME: gitlab-ci-token
-  POETRY_HTTP_BASIC_CI_PROJECT_PASSWORD: ${CI_JOB_TOKEN}
-
 # HACK
 .install_build_requires: &install_build_requires
   - poetry run pip install toml
@@ -21,7 +16,8 @@ variables:
     - when: on_success
   script:
     - *install_build_requires
-    - poetry publish --build -r ci_project --dry-run
+    - poetry config repositories.project_pypi $CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/pypi
+    - poetry publish --build -r project_pypi -u gitlab-ci-token -p $CI_JOB_TOKEN --dry-run
   artifacts:
     paths:
       - dist
@@ -38,8 +34,9 @@ variables:
   script:
     - *install_build_requires
     - echo "publish as $CI_COMMIT_TAG"
+    - poetry config repositories.project_pypi $CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/pypi
     - poetry version $CI_COMMIT_TAG
-    - poetry publish --build -r ci_project
+    - poetry publish --build -r project_pypi -u gitlab-ci-token -p $CI_JOB_TOKEN
 
 test-publish:
   extends: .test-publish
