@@ -1,3 +1,6 @@
+include:
+  - template: Workflows/MergeRequest-Pipelines.gitlab-ci.yml
+
 variables:
   PIP_CACHE_DIR: $CI_PROJECT_DIR/.cache/pip
   POETRY_CACHE_DIR: $CI_PROJECT_DIR/.cache/pypoetry
